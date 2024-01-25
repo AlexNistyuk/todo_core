@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  fastapi_todo_core_app:
+    build: .
+    container_name: ${WEB_HOST}
+    ports:
+      - ${WEB_PORT}:${WEB_PORT}
+    env_file:
+      - .env
+    entrypoint:
+      - ./entrypoints/fastapi.sh
+
+  postgres_core_app:
+    image: postgres:alpine
+    container_name: ${POSTGRES_HOST}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    env_file:
+      - .env
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
