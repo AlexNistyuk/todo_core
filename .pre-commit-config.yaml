@@ -15,6 +15,7 @@
         types: [ python ]
         args:
         -   --max-line-length=100
+        exclude: ^src/alembic/
 
 -   repo: https://github.com/pycqa/isort
     rev: 5.12.0
