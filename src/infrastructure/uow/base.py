@@ -1,5 +1,5 @@
 from infrastructure.managers.database import DatabaseManager
-from infrastructure.repositories.lists import ListRepository
+from infrastructure.repositories.sheets import SheetRepository
 from infrastructure.repositories.tasks import TaskRepository
 from infrastructure.uow.interfaces import IUnitOfWork
 
@@ -17,7 +17,7 @@ class UnitOfWork(DatabaseManager, IUnitOfWork):
 
     async def __aenter__(self):
         self.session = self.session_factory()
-        self.lists = ListRepository(self.session)
+        self.sheets = SheetRepository(self.session)
         self.tasks = TaskRepository(self.session)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):

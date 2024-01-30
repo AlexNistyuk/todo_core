@@ -4,7 +4,7 @@ from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 from infrastructure.config import get_settings
-from infrastructure.models.lists import List
+from infrastructure.models.sheets import Sheet
 from infrastructure.models.tasks import Task
 
 settings = get_settings()
@@ -24,7 +24,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = List.metadata
+target_metadata = Sheet.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

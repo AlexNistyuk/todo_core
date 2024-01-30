@@ -22,11 +22,11 @@ pg_enum = Annotated[
 
 class Task(Base):
     __tablename__ = "tasks"
-    __table_args__ = (UniqueConstraint("name", "list_id"),)
+    __table_args__ = (UniqueConstraint("name", "sheet_id"),)
 
     name: Mapped[str] = mapped_column(String(20))
     description: Mapped[str] = mapped_column(String(100), nullable=True)
     status: Mapped[pg_enum]
-    list_id: Mapped[int] = mapped_column(
-        ForeignKey("lists.id", ondelete="CASCADE"), nullable=False
+    sheet_id: Mapped[int] = mapped_column(
+        ForeignKey("sheets.id", ondelete="CASCADE"), nullable=False
     )
