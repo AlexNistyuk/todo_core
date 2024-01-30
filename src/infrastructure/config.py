@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     db_url: str
     db_pool_size: int
     db_max_overflow: int
+    user_info_url: str
 
     model_config = SettingsConfigDict(env_file=ENV_FILE_PATH)
 
