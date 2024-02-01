@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 
 from application.use_cases.tasks import TaskUseCase
@@ -8,6 +8,7 @@ from domain.entities.tasks import (
     TaskRetrieveDTO,
     TaskUpdateDTO,
 )
+from infrastructure.permissions.users import IsAdmin
 
 router = APIRouter()
 
@@ -18,7 +19,7 @@ async def get_all_tasks():
 
 
 @router.post("/", response_model=TaskIdDTO, status_code=HTTP_201_CREATED)
-async def create_task(new_task: TaskCreateDTO):
+async def create_task(new_task: TaskCreateDTO, permission=Depends(IsAdmin())):
     task_id = await TaskUseCase().insert(new_task.model_dump())
 
     return {"id": task_id}

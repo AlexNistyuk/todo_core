@@ -2,6 +2,7 @@ import os
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import Extra
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -9,21 +10,14 @@ ENV_FILE_PATH = os.path.join(BASE_DIR.parent.parent, ".env")
 
 
 class Settings(BaseSettings):
-    web_host: str
-    web_port: int
-    web_container_host: str
-    workers: int
-    postgres_host: str
-    postgres_port: int
-    postgres_db: str
-    postgres_user: str
-    postgres_password: str
     db_url: str
     db_pool_size: int
     db_max_overflow: int
     user_info_url: str
+    kafka_url: str
+    kafka_topic: str
 
-    model_config = SettingsConfigDict(env_file=ENV_FILE_PATH)
+    model_config = SettingsConfigDict(env_file=ENV_FILE_PATH, extra=Extra.allow)
 
 
 @lru_cache
