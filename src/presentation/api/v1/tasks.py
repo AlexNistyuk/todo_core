@@ -36,5 +36,5 @@ async def update_task_by_id(task_id: int, updated_task: TaskUpdateDTO):
 
 
 @router.delete("/{task_id}", status_code=HTTP_204_NO_CONTENT)
-async def delete_task_by_id(task_id: int):
+async def delete_task_by_id(task_id: int, permission=Depends(IsAdmin())):
     await TaskUseCase().delete_by_id(task_id)
