@@ -20,9 +20,7 @@ async def create_sheet(
     request: Request, new_sheet: SheetCreateUpdateDTO, permission=Depends(IsAdmin())
 ):
     sheet_id = await SheetUseCase().insert(new_sheet.model_dump())
-    await KafkaUseCase().send_creating_sheet(
-        new_sheet.name, request.state.user.get("id")
-    )
+    await KafkaUseCase().send_create_sheet(new_sheet.name, request.state.user.get("id"))
 
     return {"id": sheet_id}
 
@@ -30,7 +28,7 @@ async def create_sheet(
 @router.get("/{sheet_id}", response_model=SheetRetrieveDTO, status_code=HTTP_200_OK)
 async def get_sheet_by_id(request: Request, sheet_id: int):
     sheet = await SheetUseCase().get_by_id(sheet_id)
-    await KafkaUseCase().send_creating_sheet(sheet.name, request.state.user.get("id"))
+    await KafkaUseCase().send_retrieve_sheet(sheet.name, request.state.user.get("id"))
 
     return sheet
 

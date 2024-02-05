@@ -26,9 +26,7 @@ async def create_task(
     request: Request, new_task: TaskCreateDTO, permission=Depends(IsAdmin())
 ):
     task_id = await TaskUseCase().insert(new_task.model_dump())
-    await KafkaUseCase().send_creating_sheet(
-        new_task.name, request.state.user.get("id")
-    )
+    await KafkaUseCase().send_create_task(new_task.name, request.state.user.get("id"))
 
     return {"id": task_id}
 
@@ -36,7 +34,7 @@ async def create_task(
 @router.get("/{task_id}", response_model=TaskRetrieveDTO, status_code=HTTP_200_OK)
 async def get_task_by_id(request: Request, task_id: int):
     task = await TaskUseCase().get_by_id(task_id)
-    await KafkaUseCase().send_getting_task(task.name, request.state.user.get("id"))
+    await KafkaUseCase().send_retrieve_task(task.name, request.state.user.get("id"))
 
     return task
 

@@ -12,19 +12,19 @@ class Action(enum.Enum):
 class KafkaUseCase:
     repository = KafkaRepository()
 
-    async def send_creating_task(self, name: str, user_id: int) -> None:
+    async def send_create_task(self, name: str, user_id: int) -> None:
         await self.__send_task_message(name, Action.create.value, user_id)
 
-    async def send_getting_task(self, name: str, user_id: int) -> None:
+    async def send_retrieve_task(self, name: str, user_id: int) -> None:
         await self.__send_task_message(name, Action.retrieve.value, user_id)
 
     async def send_done_task(self, name: str, user_id: int) -> None:
         await self.__send_task_message(name, Action.done.value, user_id)
 
-    async def send_creating_sheet(self, name: str, user_id: int) -> None:
+    async def send_create_sheet(self, name: str, user_id: int) -> None:
         await self.__send_sheet_message(name, Action.create.value, user_id)
 
-    async def send_getting_sheet(self, name: str, user_id: int) -> None:
+    async def send_retrieve_sheet(self, name: str, user_id: int) -> None:
         await self.__send_sheet_message(name, Action.retrieve.value, user_id)
 
     async def __send_task_message(self, name: str, action: str, user_id: int):
