@@ -29,7 +29,7 @@ class TaskUseCase(IUseCase):
             raise TaskCreateError
         return result
 
-    async def update_by_id(self, data: dict, task_id: int) -> int:
+    async def update_by_id(self, data: dict, task_id: int) -> Task:
         try:
             async with self.uow():
                 result = await self.uow.tasks.update_by_id(data, task_id)

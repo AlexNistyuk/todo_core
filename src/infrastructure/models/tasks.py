@@ -11,12 +11,12 @@ from infrastructure.models.base import Base
 
 
 class TaskStatus(enum.Enum):
-    IN_PROGRESS = "in progress"
-    DONE = "done"
+    in_progress = "in progress"
+    done = "done"
 
 
 pg_enum = Annotated[
-    str, mapped_column(PgEnum(TaskStatus), default=TaskStatus.IN_PROGRESS)
+    str, mapped_column(PgEnum(TaskStatus), default=TaskStatus.in_progress)
 ]
 
 

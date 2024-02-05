@@ -25,7 +25,7 @@ class BaseRepository(IRepository):
             update(self.model)
             .values(**data)
             .filter_by(id=record_id)
-            .returning(self.model.id)
+            .returning(self.model)
         )
         result = await self.session.execute(query)
 
