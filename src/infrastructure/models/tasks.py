@@ -1,23 +1,8 @@
-import enum
-from typing import Annotated
-
 from sqlalchemy import ForeignKey, String, UniqueConstraint
-from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
+from domain.utils.task_status import TaskStatus
 from infrastructure.models.base import Base
-
-# TODO change postgres enum realization
-
-
-class TaskStatus(enum.Enum):
-    in_progress = "in progress"
-    done = "done"
-
-
-pg_enum = Annotated[
-    str, mapped_column(PgEnum(TaskStatus), default=TaskStatus.in_progress)
-]
 
 
 class Task(Base):
@@ -26,7 +11,9 @@ class Task(Base):
 
     name: Mapped[str] = mapped_column(String(20))
     description: Mapped[str] = mapped_column(String(100), nullable=True)
-    status: Mapped[pg_enum]
+    status: Mapped[TaskStatus] = mapped_column(
+        server_default=TaskStatus.in_progress.value
+    )
     sheet_id: Mapped[int] = mapped_column(
         ForeignKey("sheets.id", ondelete="CASCADE"), nullable=False
     )

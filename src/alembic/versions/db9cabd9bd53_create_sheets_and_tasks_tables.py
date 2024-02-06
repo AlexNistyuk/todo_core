@@ -1,19 +1,18 @@
-"""Create sheets and tasks table
+"""Create sheets and tasks tables
 
-Revision ID: 9ea527ab397d
+Revision ID: db9cabd9bd53
 Revises:
-Create Date: 2024-02-02 11:30:10.410889
+Create Date: 2024-02-06 11:53:42.984095
 
 """
 from typing import Sequence, Union
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "9ea527ab397d"
+revision: str = "db9cabd9bd53"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -37,7 +36,8 @@ def upgrade() -> None:
         sa.Column("description", sa.String(length=100), nullable=True),
         sa.Column(
             "status",
-            postgresql.ENUM("in_progress", "done", name="taskstatus"),
+            sa.Enum("in_progress", "done", name="taskstatus"),
+            server_default="in_progress",
             nullable=False,
         ),
         sa.Column("sheet_id", sa.Integer(), nullable=False),

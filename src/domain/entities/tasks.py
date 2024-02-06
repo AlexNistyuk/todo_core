@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+from domain.utils.task_status import TaskStatus
+
 
 class TaskIdDTO(BaseModel):
     id: int
@@ -14,7 +16,7 @@ class TaskCreateDTO(BaseModel):
 
 
 class TaskUpdateDTO(TaskCreateDTO):
-    status: str
+    status: TaskStatus
 
 
 class TaskRetrieveDTO(TaskIdDTO, TaskUpdateDTO):
