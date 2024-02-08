@@ -47,8 +47,6 @@ class TestSheet:
 
     @pytest.mark.asyncio
     async def test_update_ok(self, mock_kafka, mock_admin_permission, mock_sheet_repo):
-        print(self.new_sheet.dump_create())
-
         response = client.put(
             url=f"{self.url}/{self.fake.pyint()}", json=self.new_sheet.dump_create()
         )
