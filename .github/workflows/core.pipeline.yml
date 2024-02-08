@@ -1,0 +1,46 @@
+name: todo_auth
+
+on: [push, pull_request]
+
+jobs:
+  linters:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install packages
+        run: pip install mypy
+
+      - name: Format with flake8
+        uses: actions/checkout@v4
+      - uses: TrueBrain/actions-flake8@v2
+        with:
+          max_line_length: 100
+
+      - name: Format with black
+        uses: actions/checkout@v3
+      - uses: psf/black@stable
+        with:
+          options: "--check --verbose"
+          version: "23.11.0"
+
+      - name: Format with isort
+        uses: davidslusser/actions_python_isort@v1.0.0
+        with:
+          options: "--check --diff --profile black --filter-files"
+
+      - name: Typing with mypy
+        run: mypy --explicit-package-base --ignore-missing-imports src/
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Create .env
+      - run: cp ./.env.example ./.env
+
+        name: Install poetry
+      - run: pipx install poetry
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
+          cache: "poetry"
+      - run: poetry install
+      - run: poetry run pytest

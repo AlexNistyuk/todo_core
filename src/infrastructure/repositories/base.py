@@ -9,8 +9,6 @@ from infrastructure.repositories.interfaces import IRepository
 class BaseRepository(IRepository):
     """Base repository"""
 
-    model = None
-
     def __init__(self, session: AsyncSession):
         self.session: AsyncSession = session
 

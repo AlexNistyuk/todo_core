@@ -11,13 +11,13 @@ from presentation.routers import router as api_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    db_manager = await DatabaseManager.connect()
-    kafka_manager = await KafkaManager.connect()
+    await DatabaseManager.connect()
+    await KafkaManager.connect()
 
     yield
 
-    await db_manager.close()
-    await kafka_manager.close()
+    await DatabaseManager.close()
+    await KafkaManager.close()
 
 
 middlewares = (UserAuthMiddleware,)
