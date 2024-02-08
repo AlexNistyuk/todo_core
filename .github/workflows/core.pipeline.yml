@@ -14,7 +14,7 @@ jobs:
       - uses: TrueBrain/actions-flake8@v2
         with:
           max_line_length: 100
-          extra_arguments: --exclude ^src/alembic/
+          extra_arguments: --exclude ^src/alembic/env.py
 
       - name: Format with black
         uses: actions/checkout@v3
