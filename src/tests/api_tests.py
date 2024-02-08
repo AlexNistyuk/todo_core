@@ -14,6 +14,7 @@ def web_app(mock_kafka, mock_admin_permission):
 schema = schemathesis.from_pytest_fixture("web_app")
 
 
+@pytest.mark.schemathesis
 @schema.parametrize()
 def test_api(case):
     response = case.call_asgi(app)
