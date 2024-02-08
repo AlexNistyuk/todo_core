@@ -15,7 +15,6 @@ jobs:
         with:
           max_line_length: 100
 
-
       - name: Mypy
         run: mypy --explicit-package-base --ignore-missing-imports src/
   formaters:
