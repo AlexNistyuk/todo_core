@@ -1,8 +1,8 @@
 """Create sheets and tasks tables
 
-Revision ID: e98d1d72f65d
+Revision ID: ad298bc801bb
 Revises:
-Create Date: 2024-02-09 12:29:15.575052
+Create Date: 2024-02-09 16:20:45.946039
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "e98d1d72f65d"
+revision: str = "ad298bc801bb"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
