@@ -1,4 +1,3 @@
-import sys
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -31,4 +30,9 @@ app.include_router(api_router)
 init_user_middleware(app, ignore_paths=("/docs", "/openapi.json"))
 
 container = Container()
-container.wire(modules=[sys.modules[__name__]])
+container.wire(
+    modules=[
+        "presentation.api.v1.sheets",
+        "presentation.api.v1.tasks",
+    ]
+)
