@@ -9,6 +9,9 @@ services:
       - .env
     entrypoint:
       - ./entrypoints/fastapi.sh
+    depends_on:
+      - postgres_core_app
+      - kafka_app
 
   postgres_core_app:
     image: postgres:alpine
@@ -43,3 +46,8 @@ services:
       KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${KAFKA_REPLICATION_FACTOR}
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
+
+networks:
+  default:
+    name: ${DEFAULT_NETWORK}
+    external: true
