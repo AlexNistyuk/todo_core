@@ -8,7 +8,6 @@ from starlette.status import (
     HTTP_503_SERVICE_UNAVAILABLE,
 )
 
-from application.use_cases.kafka import KafkaUseCase
 from application.use_cases.sheets import SheetUseCase
 from domain.entities.sheets import SheetCreateUpdateDTO, SheetIdDTO, SheetRetrieveDTO
 from infrastructure.permissions.users import IsAdmin
@@ -41,10 +40,7 @@ async def get_all_sheets():
 async def create_sheet(
     request: Request, new_sheet: SheetCreateUpdateDTO, permission=Depends(IsAdmin())
 ):
-    sheet_id = await SheetUseCase().insert(new_sheet.model_dump())
-    await KafkaUseCase().send_create_sheet(new_sheet.name, request.state.user.get("id"))
-
-    return {"id": sheet_id}
+    return await SheetUseCase().insert(new_sheet.model_dump(), request.state.user)
 
 
 @router.get(
@@ -57,10 +53,7 @@ async def create_sheet(
     },
 )
 async def get_sheet_by_id(request: Request, sheet_id: int):
-    sheet = await SheetUseCase().get_by_id(sheet_id)
-    await KafkaUseCase().send_retrieve_sheet(sheet.name, request.state.user.get("id"))
-
-    return sheet
+    return await SheetUseCase().get_by_id(sheet_id, request.state.user)
 
 
 @router.put(

@@ -2,6 +2,7 @@ from sqlalchemy import Sequence
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from application.use_cases.interfaces import IUseCase
+from application.use_cases.kafka import KafkaUseCase
 from domain.exceptions.sheets import (
     SheetCreateError,
     SheetDeleteError,
@@ -10,7 +11,7 @@ from domain.exceptions.sheets import (
     SheetRetrieveError,
     SheetUpdateError,
 )
-from infrastructure.models.tasks import Task
+from infrastructure.models.sheets import Sheet
 from infrastructure.uow.base import UnitOfWork
 
 
@@ -18,8 +19,9 @@ class SheetUseCase(IUseCase):
     """Sheet use case"""
 
     uow = UnitOfWork()
+    kafka_use_case = KafkaUseCase()
 
-    async def insert(self, data: dict) -> int:
+    async def insert(self, data: dict, user: dict) -> dict:
         try:
             async with self.uow():
                 result = await self.uow.sheets.insert(data)
@@ -27,7 +29,10 @@ class SheetUseCase(IUseCase):
             raise SheetIntegrityError
         except Exception:
             raise SheetCreateError
-        return result
+
+        await self.kafka_use_case.send_create_sheet(data.get("name"), user.get("id"))
+
+        return {"id": result}
 
     async def update_by_id(self, data: dict, sheet_id: int) -> int:
         try:
@@ -51,7 +56,7 @@ class SheetUseCase(IUseCase):
             raise SheetRetrieveError
         return result
 
-    async def get_by_id(self, sheet_id: int) -> Task:
+    async def get_by_id(self, sheet_id: int, user: dict) -> Sheet:
         try:
             async with self.uow():
                 result = await self.uow.sheets.get_by_id(sheet_id)
@@ -59,6 +64,9 @@ class SheetUseCase(IUseCase):
             raise SheetNotFoundError
         except Exception:
             raise SheetRetrieveError
+
+        await self.kafka_use_case.send_retrieve_sheet(result.name, user.get("id"))
+
         return result
 
     async def delete_by_id(self, sheet_id: int) -> None:

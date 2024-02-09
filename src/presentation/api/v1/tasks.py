@@ -8,7 +8,6 @@ from starlette.status import (
     HTTP_503_SERVICE_UNAVAILABLE,
 )
 
-from application.use_cases.kafka import KafkaUseCase
 from application.use_cases.tasks import TaskUseCase
 from domain.entities.tasks import (
     TaskCreateDTO,
@@ -16,7 +15,6 @@ from domain.entities.tasks import (
     TaskRetrieveDTO,
     TaskUpdateDTO,
 )
-from infrastructure.models.tasks import TaskStatus
 from infrastructure.permissions.users import IsAdmin
 
 router = APIRouter()
@@ -47,10 +45,7 @@ async def get_all_tasks():
 async def create_task(
     request: Request, new_task: TaskCreateDTO, permission=Depends(IsAdmin())
 ):
-    task_id = await TaskUseCase().insert(new_task.model_dump())
-    await KafkaUseCase().send_create_task(new_task.name, request.state.user.get("id"))
-
-    return {"id": task_id}
+    return await TaskUseCase().insert(new_task.model_dump(), request.state.user)
 
 
 @router.get(
@@ -63,10 +58,7 @@ async def create_task(
     },
 )
 async def get_task_by_id(request: Request, task_id: int):
-    task = await TaskUseCase().get_by_id(task_id)
-    await KafkaUseCase().send_retrieve_task(task.name, request.state.user.get("id"))
-
-    return task
+    return await TaskUseCase().get_by_id(task_id, request.state.user)
 
 
 @router.put(
@@ -92,10 +84,7 @@ async def update_task_by_id(
     },
 )
 async def done_task_by_id(request: Request, task_id: int):
-    data = {"status": TaskStatus.done.value}
-
-    task = await TaskUseCase().update_by_id(data, task_id)
-    await KafkaUseCase().send_done_task(task.name, request.state.user.get("id"))
+    return await TaskUseCase().done_by_id(task_id, request.state.user)
 
 
 @router.delete(
