@@ -9,7 +9,7 @@ from starlette.status import (
     HTTP_503_SERVICE_UNAVAILABLE,
 )
 
-from application.providers.providers import Container
+from application.dependencies import Container
 from domain.entities.sheets import SheetCreateUpdateDTO, SheetIdDTO, SheetRetrieveDTO
 from infrastructure.permissions.users import IsAdmin
 

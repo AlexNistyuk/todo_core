@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from application.providers.providers import Container
+from application.dependencies import Container
 from infrastructure.managers.database import DatabaseManager
 from infrastructure.managers.kafka import KafkaManager
 from infrastructure.middlewares.user import UserAuthMiddleware
