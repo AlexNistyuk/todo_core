@@ -1,6 +1,6 @@
 import enum
 
-from infrastructure.repositories.kafka import KafkaRepository
+from infrastructure.managers.kafka import KafkaManager
 
 
 class ActionType(enum.Enum):
@@ -9,9 +9,7 @@ class ActionType(enum.Enum):
     done = "done"
 
 
-class KafkaUseCase:
-    repository = KafkaRepository()
-
+class KafkaUseCase(KafkaManager):
     async def send_create_task(self, name: str, user_id: int) -> None:
         await self.__send_task_message(name, ActionType.create.value, user_id)
 
@@ -43,4 +41,4 @@ class KafkaUseCase:
             "action_type": action_type,
         }
 
-        await self.repository.send_message(message)
+        await self.send_message(message)

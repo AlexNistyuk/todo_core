@@ -1,3 +1,4 @@
+import json
 import logging
 
 from aiokafka import AIOKafkaProducer
@@ -9,9 +10,16 @@ from infrastructure.managers.interfaces import IManager
 logger = logging.Logger(__name__)
 
 
+settings = get_settings()
+
+
 class KafkaManager(IManager):
     client: AIOKafkaProducer
-    url = get_settings().kafka_url
+    url = settings.kafka_url
+    topic = settings.kafka_topic
+
+    async def send_message(self, message: dict):
+        return await self.client.send(self.topic, json.dumps(message).encode("utf8"))
 
     @classmethod
     async def connect(cls):
@@ -20,8 +28,6 @@ class KafkaManager(IManager):
 
             cls.client = AIOKafkaProducer(bootstrap_servers=cls.url)
             await cls.client.start()
-
-            return cls
         except KafkaError as exc:
             logger.error(f"Error while connecting to kafka: {exc}")
 
