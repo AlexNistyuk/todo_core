@@ -1,16 +1,32 @@
+import typing
+
 from aiohttp import ClientConnectorError
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from starlette.middleware.base import (
+    BaseHTTPMiddleware,
+    DispatchFunction,
+    RequestResponseEndpoint,
+)
 from starlette.requests import Request
 from starlette.responses import Response
+from starlette.types import ASGIApp
 
 from infrastructure.utils.user import UserInfo
 
 
 class UserAuthMiddleware(BaseHTTPMiddleware):
+    def __init__(
+        self,
+        app: ASGIApp,
+        ignore_paths: tuple,
+        dispatch: typing.Optional[DispatchFunction] = None,
+    ):
+        super().__init__(app, dispatch)
+        self.ignore_paths = ignore_paths
+
     async def dispatch(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
-        if request.url.path not in {"/docs", "/openapi.json"}:
+        if request.url.path not in self.ignore_paths:
             try:
                 user = await UserInfo.get_user_info(request.headers)
             except ClientConnectorError:

@@ -20,11 +20,14 @@ async def lifespan(app: FastAPI):
     await KafkaManager.close()
 
 
-middlewares = (UserAuthMiddleware,)
+def init_user_middleware(app: FastAPI, ignore_paths: tuple):
+    app.add_middleware(UserAuthMiddleware, ignore_paths=ignore_paths)
+
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(api_router)
-app.add_middleware(UserAuthMiddleware)
+
+init_user_middleware(app, ignore_paths=("/docs", "/openapi.json"))
 
 
 # TODO delete in production

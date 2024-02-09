@@ -3,9 +3,10 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from domain.utils.task_status import TaskStatus
 from infrastructure.models.base import Base
+from infrastructure.models.mixins import TimeMixin
 
 
-class Task(Base):
+class Task(Base, TimeMixin):
     __tablename__ = "tasks"
     __table_args__ = (UniqueConstraint("name", "sheet_id"),)
 
