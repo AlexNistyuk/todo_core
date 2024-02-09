@@ -1,8 +1,9 @@
+import sys
 from contextlib import asynccontextmanager
 
-import uvicorn
 from fastapi import FastAPI
 
+from application.providers.providers import Container
 from infrastructure.managers.database import DatabaseManager
 from infrastructure.managers.kafka import KafkaManager
 from infrastructure.middlewares.user import UserAuthMiddleware
@@ -29,8 +30,5 @@ app.include_router(api_router)
 
 init_user_middleware(app, ignore_paths=("/docs", "/openapi.json"))
 
-
-# TODO delete in production
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8001)
+container = Container()
+container.wire(modules=[sys.modules[__name__]])

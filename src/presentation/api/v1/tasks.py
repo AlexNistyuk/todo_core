@@ -1,3 +1,4 @@
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 from starlette.requests import Request
 from starlette.status import (
@@ -8,7 +9,7 @@ from starlette.status import (
     HTTP_503_SERVICE_UNAVAILABLE,
 )
 
-from application.use_cases.tasks import TaskUseCase
+from application.providers.providers import Container
 from domain.entities.tasks import (
     TaskCreateDTO,
     TaskIdDTO,
@@ -29,8 +30,9 @@ router = APIRouter()
         HTTP_503_SERVICE_UNAVAILABLE: {},
     },
 )
-async def get_all_tasks():
-    return await TaskUseCase().get_all()
+@inject
+async def get_all_tasks(use_case=Depends(Provide[Container.task_use_case])):
+    return await use_case.get_all()
 
 
 @router.post(
@@ -42,10 +44,14 @@ async def get_all_tasks():
         HTTP_503_SERVICE_UNAVAILABLE: {},
     },
 )
+@inject
 async def create_task(
-    request: Request, new_task: TaskCreateDTO, permission=Depends(IsAdmin())
+    request: Request,
+    new_task: TaskCreateDTO,
+    permission=Depends(IsAdmin()),
+    use_case=Depends(Provide[Container.task_use_case]),
 ):
-    return await TaskUseCase().insert(new_task.model_dump(), request.state.user)
+    return await use_case.insert(new_task.model_dump(), request.state.user)
 
 
 @router.get(
@@ -57,8 +63,11 @@ async def create_task(
         HTTP_503_SERVICE_UNAVAILABLE: {},
     },
 )
-async def get_task_by_id(request: Request, task_id: int):
-    return await TaskUseCase().get_by_id(task_id, request.state.user)
+@inject
+async def get_task_by_id(
+    request: Request, task_id: int, use_case=Depends(Provide[Container.task_use_case])
+):
+    return await use_case.get_by_id(task_id, request.state.user)
 
 
 @router.put(
@@ -69,10 +78,14 @@ async def get_task_by_id(request: Request, task_id: int):
         HTTP_503_SERVICE_UNAVAILABLE: {},
     },
 )
+@inject
 async def update_task_by_id(
-    task_id: int, updated_task: TaskUpdateDTO, permission=Depends(IsAdmin())
+    task_id: int,
+    updated_task: TaskUpdateDTO,
+    permission=Depends(IsAdmin()),
+    use_case=Depends(Provide[Container.task_use_case]),
 ):
-    await TaskUseCase().update_by_id(updated_task.model_dump(), task_id)
+    await use_case.update_by_id(updated_task.model_dump(), task_id)
 
 
 @router.patch(
@@ -83,8 +96,11 @@ async def update_task_by_id(
         HTTP_503_SERVICE_UNAVAILABLE: {},
     },
 )
-async def done_task_by_id(request: Request, task_id: int):
-    return await TaskUseCase().done_by_id(task_id, request.state.user)
+@inject
+async def done_task_by_id(
+    request: Request, task_id: int, use_case=Depends(Provide[Container.task_use_case])
+):
+    await use_case.done_by_id(task_id, request.state.user)
 
 
 @router.delete(
@@ -95,5 +111,10 @@ async def done_task_by_id(request: Request, task_id: int):
         HTTP_503_SERVICE_UNAVAILABLE: {},
     },
 )
-async def delete_task_by_id(task_id: int, permission=Depends(IsAdmin())):
-    await TaskUseCase().delete_by_id(task_id)
+@inject
+async def delete_task_by_id(
+    task_id: int,
+    permission=Depends(IsAdmin()),
+    use_case=Depends(Provide[Container.task_use_case]),
+):
+    await use_case.delete_by_id(task_id)
