@@ -17,7 +17,7 @@ services:
     image: postgres:alpine
     container_name: ${POSTGRES_HOST}
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${POSTGRES_PORT_LOCAL}:${POSTGRES_PORT}
     env_file:
       - .env
     volumes:

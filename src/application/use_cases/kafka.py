@@ -26,10 +26,10 @@ class KafkaUseCase(KafkaManager):
         await self.__send_sheet_message(name, ActionType.retrieve.value, user_id)
 
     async def __send_task_message(self, name: str, action_at: str, user_id: int):
-        await self.__send_message(name, action_at, user_id, "task")
+        await self.__send_message(name, "task", user_id, action_at)
 
     async def __send_sheet_message(self, name: str, action_at: str, user_id: int):
-        await self.__send_message(name, action_at, user_id, "sheet")
+        await self.__send_message(name, "sheet", user_id, action_at)
 
     async def __send_message(
         self, name: str, action_at: str, user_id: int, action_type: str
