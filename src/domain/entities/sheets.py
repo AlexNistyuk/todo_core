@@ -9,7 +9,7 @@ class SheetIdDTO(BaseModel):
 
 class SheetCreateUpdateDTO(BaseModel):
     name: str = Field(min_length=1, max_length=20)
-    description: str = Field(max_length=100)
+    description: str | None = Field(max_length=100, default=None)
 
 
 class SheetRetrieveDTO(SheetIdDTO, SheetCreateUpdateDTO):
