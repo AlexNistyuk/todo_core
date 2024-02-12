@@ -10,8 +10,10 @@ services:
     entrypoint:
       - ./entrypoints/fastapi.sh
     depends_on:
-      - postgres_core_app
-      - kafka_app
+      postgres_core_app:
+        condition: service_started
+      kafka_app:
+        condition: service_healthy
 
   postgres_core_app:
     image: postgres:alpine
@@ -46,6 +48,11 @@ services:
       KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${KAFKA_REPLICATION_FACTOR}
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
+    healthcheck:
+      test: nc -z localhost ${KAFKA_PORT} || exit -1
+      interval: ${KAFKA_HEALTHCHECK_INTERVAL}
+      timeout: ${KAFKA_HEALTHCHECK_TIMEOUT}
+      retries: ${KAFKA_HEALTHCHECK_RETRIES}
 
 networks:
   default:

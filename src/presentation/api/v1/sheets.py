@@ -26,8 +26,8 @@ router = APIRouter()
     },
 )
 @inject
-async def get_all_sheets(use_case=Depends(Provide[Container.sheet_use_case])):
-    return await use_case.get_all()
+async def get_all_sheets(sheet_use_case=Depends(Provide[Container.sheet_use_case])):
+    return await sheet_use_case.get_all()
 
 
 @router.post(
@@ -44,9 +44,9 @@ async def create_sheet(
     request: Request,
     new_sheet: SheetCreateUpdateDTO,
     permission=Depends(IsAdmin()),
-    use_case=Depends(Provide[Container.sheet_use_case]),
+    sheet_use_case=Depends(Provide[Container.sheet_use_case]),
 ):
-    return await use_case.insert(new_sheet.model_dump(), request.state.user)
+    return await sheet_use_case.insert(new_sheet.model_dump(), request.state.user)
 
 
 @router.get(
@@ -60,9 +60,11 @@ async def create_sheet(
 )
 @inject
 async def get_sheet_by_id(
-    request: Request, sheet_id: int, use_case=Depends(Provide[Container.sheet_use_case])
+    request: Request,
+    sheet_id: int,
+    sheet_use_case=Depends(Provide[Container.sheet_use_case]),
 ):
-    return await use_case.get_by_id(sheet_id, request.state.user)
+    return await sheet_use_case.get_by_id(sheet_id, request.state.user)
 
 
 @router.put(
@@ -78,9 +80,9 @@ async def update_sheet_by_id(
     sheet_id: int,
     updated_sheet: SheetCreateUpdateDTO,
     permission=Depends(IsAdmin()),
-    use_case=Depends(Provide[Container.sheet_use_case]),
+    sheet_use_case=Depends(Provide[Container.sheet_use_case]),
 ):
-    await use_case.update_by_id(updated_sheet.model_dump(), sheet_id)
+    await sheet_use_case.update_by_id(updated_sheet.model_dump(), sheet_id)
 
 
 @router.delete(
@@ -95,6 +97,6 @@ async def update_sheet_by_id(
 async def delete_sheet_by_id(
     sheet_id: int,
     permission=Depends(IsAdmin()),
-    use_case=Depends(Provide[Container.sheet_use_case]),
+    sheet_use_case=Depends(Provide[Container.sheet_use_case]),
 ):
-    await use_case.delete_by_id(sheet_id)
+    await sheet_use_case.delete_by_id(sheet_id)

@@ -14,25 +14,25 @@ async def lifespan(app: FastAPI):
     await DatabaseManager.connect()
     await KafkaManager.connect()
 
+    container = Container()
+    container.wire(
+        modules=[
+            "presentation.api.v1.sheets",
+            "presentation.api.v1.tasks",
+        ]
+    )
+
     yield
 
     await DatabaseManager.close()
     await KafkaManager.close()
 
 
-def init_user_middleware(app: FastAPI, ignore_paths: tuple):
+def init_user_middleware(app: FastAPI, ignore_paths=("/docs", "/openapi.json")):
     app.add_middleware(UserAuthMiddleware, ignore_paths=ignore_paths)
 
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(api_router)
 
-init_user_middleware(app, ignore_paths=("/docs", "/openapi.json"))
-
-container = Container()
-container.wire(
-    modules=[
-        "presentation.api.v1.sheets",
-        "presentation.api.v1.tasks",
-    ]
-)
+init_user_middleware(app)

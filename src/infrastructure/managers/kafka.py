@@ -1,4 +1,3 @@
-import asyncio
 import json
 import logging
 
@@ -24,8 +23,6 @@ class KafkaManager(IManager):
 
     @classmethod
     async def connect(cls):
-        await asyncio.sleep(10)
-
         try:
             logger.info("Connect to Kafka")
 
