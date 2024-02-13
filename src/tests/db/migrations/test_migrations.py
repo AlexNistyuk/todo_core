@@ -7,7 +7,7 @@ from tests.db.migrations.utils import get_revisions
 
 
 @pytest.mark.parametrize("revision", get_revisions())
-def test_migrations_stairway(alembic_config: Config, revision: Script):
+def test_migrations(alembic_config: Config, revision: Script):
     upgrade(alembic_config, revision.revision)
 
     down_revision = "-1" if not (x := revision.down_revision) else str(x)
