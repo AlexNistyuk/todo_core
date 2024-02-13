@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from domain.enums.task_status import TaskStatus
+from domain.enums.tasks import TaskStatus
 
 
 class TaskIdDTO(BaseModel):

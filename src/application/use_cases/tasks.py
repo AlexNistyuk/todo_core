@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from application.use_cases.interfaces import IUseCase
 from application.use_cases.kafka import KafkaUseCase
-from domain.enums.task_status import TaskStatus
+from domain.enums.tasks import TaskStatus
 from domain.exceptions.tasks import (
     TaskCreateError,
     TaskDeleteError,

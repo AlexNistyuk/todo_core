@@ -1,4 +1,4 @@
-from domain.enums.roles import UserRole
+from domain.enums.users import UserRole
 from infrastructure.config import get_settings
 from infrastructure.permissions.base import BasePermission
 

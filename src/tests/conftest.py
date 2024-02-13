@@ -2,7 +2,7 @@ import faker
 import pytest
 from starlette.testclient import TestClient
 
-from domain.enums.roles import UserRole
+from domain.enums.users import UserRole
 from main import app
 from tests.factories import SheetFactory, TaskFactory, UserFactory
 

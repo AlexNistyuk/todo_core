@@ -1,7 +1,6 @@
 import enum
 
 
-class ActionType(enum.Enum):
+class SheetActionType(enum.Enum):
     create = "create"
     retrieve = "retrieve"
-    done = "done"

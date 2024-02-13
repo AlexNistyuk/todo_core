@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
-from domain.enums.task_status import TaskStatus
+from domain.enums.tasks import TaskStatus
 from infrastructure.models.base import Base
 from infrastructure.models.mixins import TimeMixin
 
