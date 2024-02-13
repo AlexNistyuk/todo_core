@@ -2,11 +2,10 @@ import faker
 import pytest
 from starlette.testclient import TestClient
 
-from domain.utils.roles import UserRole
+from domain.enums.roles import UserRole
 from main import app
 from tests.factories import SheetFactory, TaskFactory, UserFactory
 
-# client = TestClient(app=app)
 fake = faker.Faker()
 
 

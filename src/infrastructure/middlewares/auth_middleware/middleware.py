@@ -13,7 +13,9 @@ from starlette.types import ASGIApp
 from infrastructure.utils.user import UserInfo
 
 
-class UserAuthMiddleware(BaseHTTPMiddleware):
+class AuthMiddleware(BaseHTTPMiddleware):
+    """Set current user to request"""
+
     def __init__(
         self,
         app: ASGIApp,

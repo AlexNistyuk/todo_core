@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from application.dependencies import Container
 from infrastructure.managers.database import DatabaseManager
 from infrastructure.managers.kafka import KafkaManager
-from infrastructure.middlewares.user import UserAuthMiddleware
+from infrastructure.middlewares.auth_middleware.init import init_auth_middleware
 from presentation.routers import router as api_router
 
 
@@ -28,11 +28,7 @@ async def lifespan(app: FastAPI):
     await KafkaManager.close()
 
 
-def init_user_middleware(app: FastAPI, ignore_paths=("/docs", "/openapi.json")):
-    app.add_middleware(UserAuthMiddleware, ignore_paths=ignore_paths)
-
-
 app = FastAPI(lifespan=lifespan)
 app.include_router(api_router)
 
-init_user_middleware(app)
+init_auth_middleware(app)

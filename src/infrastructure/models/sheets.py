@@ -8,5 +8,5 @@ from infrastructure.models.mixins import TimeMixin
 class Sheet(Base, TimeMixin):
     __tablename__ = "sheets"
 
-    name: Mapped[str] = mapped_column(String(20), unique=True, index=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
     description: Mapped[str] = mapped_column(String(60), nullable=True)

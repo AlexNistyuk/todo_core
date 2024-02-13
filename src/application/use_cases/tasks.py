@@ -2,6 +2,8 @@ from sqlalchemy import Sequence
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from application.use_cases.interfaces import IUseCase
+from application.use_cases.kafka import KafkaUseCase
+from domain.enums.task_status import TaskStatus
 from domain.exceptions.tasks import (
     TaskCreateError,
     TaskDeleteError,
@@ -10,7 +12,6 @@ from domain.exceptions.tasks import (
     TaskRetrieveError,
     TaskUpdateError,
 )
-from domain.utils.task_status import TaskStatus
 from infrastructure.models.tasks import Task
 from infrastructure.uow.interfaces import IUnitOfWork
 
@@ -18,7 +19,7 @@ from infrastructure.uow.interfaces import IUnitOfWork
 class TaskUseCase(IUseCase):
     """Task use case"""
 
-    def __init__(self, uow: IUnitOfWork, kafka_use_case):
+    def __init__(self, uow: IUnitOfWork, kafka_use_case: KafkaUseCase) -> None:
         self.uow = uow
         self.kafka_use_case = kafka_use_case
 

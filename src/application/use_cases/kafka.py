@@ -1,12 +1,5 @@
-import enum
-
+from domain.enums.action_type import ActionType
 from infrastructure.managers.kafka import KafkaManager
-
-
-class ActionType(enum.Enum):
-    create = "create"
-    retrieve = "retrieve"
-    done = "done"
 
 
 class KafkaUseCase(KafkaManager):

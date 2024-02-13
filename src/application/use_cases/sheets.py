@@ -2,6 +2,7 @@ from sqlalchemy import Sequence
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from application.use_cases.interfaces import IUseCase
+from application.use_cases.kafka import KafkaUseCase
 from domain.exceptions.sheets import (
     SheetCreateError,
     SheetDeleteError,
@@ -17,7 +18,7 @@ from infrastructure.uow.interfaces import IUnitOfWork
 class SheetUseCase(IUseCase):
     """Sheet use case"""
 
-    def __init__(self, uow: IUnitOfWork, kafka_use_case):
+    def __init__(self, uow: IUnitOfWork, kafka_use_case: KafkaUseCase) -> None:
         self.uow = uow
         self.kafka_use_case = kafka_use_case
 
