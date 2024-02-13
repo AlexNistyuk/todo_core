@@ -9,13 +9,52 @@ services:
       - .env
     entrypoint:
       - ./entrypoints/fastapi.sh
+    depends_on:
+      postgres_core_app:
+        condition: service_started
+      kafka_app:
+        condition: service_healthy
 
   postgres_core_app:
     image: postgres:alpine
     container_name: ${POSTGRES_HOST}
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${POSTGRES_PORT_LOCAL}:${POSTGRES_PORT}
     env_file:
       - .env
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+
+  zookeeper_app:
+    image: confluentinc/cp-zookeeper:7.2.1
+    container_name: ${ZOOKEEPER_HOST}
+    ports:
+      - ${ZOOKEEPER_CLIENT_PORT}:${ZOOKEEPER_CLIENT_PORT}
+    env_file:
+      - .env
+
+  kafka_app:
+    image: confluentinc/cp-server:7.2.1
+    container_name: ${KAFKA_HOST}
+    depends_on:
+      - zookeeper_app
+    ports:
+      - ${KAFKA_PORT}:${KAFKA_PORT}
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOST}:${ZOOKEEPER_CLIENT_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_HOST}:${KAFKA_PORT}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${KAFKA_REPLICATION_FACTOR}
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${KAFKA_REPLICATION_FACTOR}
+    healthcheck:
+      test: nc -z localhost ${KAFKA_PORT} || exit -1
+      interval: ${KAFKA_HEALTHCHECK_INTERVAL}
+      timeout: ${KAFKA_HEALTHCHECK_TIMEOUT}
+      retries: ${KAFKA_HEALTHCHECK_RETRIES}
+
+networks:
+  default:
+    name: ${DEFAULT_NETWORK}
+    external: true
