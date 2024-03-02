@@ -16,7 +16,6 @@ from domain.entities.tasks import (
     TaskRetrieveDTO,
     TaskUpdateDTO,
 )
-from infrastructure.permissions.users import IsAdmin
 
 router = APIRouter()
 
@@ -48,14 +47,13 @@ async def get_all_tasks(task_use_case=Depends(Provide[Container.task_use_case]))
 async def create_task(
     request: Request,
     new_task: TaskCreateDTO,
-    permission=Depends(IsAdmin()),
     task_use_case=Depends(Provide[Container.task_use_case]),
 ):
     return await task_use_case.insert(new_task.model_dump(), request.state.user)
 
 
 @router.get(
-    "/{task_id}",
+    "/{task_id}/",
     response_model=TaskRetrieveDTO,
     status_code=HTTP_200_OK,
     responses={
@@ -73,7 +71,7 @@ async def get_task_by_id(
 
 
 @router.put(
-    "/{task_id}",
+    "/{task_id}/",
     status_code=HTTP_204_NO_CONTENT,
     responses={
         HTTP_400_BAD_REQUEST: {},
@@ -84,14 +82,13 @@ async def get_task_by_id(
 async def update_task_by_id(
     task_id: int,
     updated_task: TaskUpdateDTO,
-    permission=Depends(IsAdmin()),
     task_use_case=Depends(Provide[Container.task_use_case]),
 ):
     await task_use_case.update_by_id(updated_task.model_dump(), task_id)
 
 
 @router.patch(
-    "/{task_id}",
+    "/{task_id}/",
     status_code=HTTP_204_NO_CONTENT,
     responses={
         HTTP_400_BAD_REQUEST: {},
@@ -99,16 +96,16 @@ async def update_task_by_id(
     },
 )
 @inject
-async def done_task_by_id(
-    request: Request,
+async def update_task_status_by_id(
+    status: str,
     task_id: int,
     task_use_case=Depends(Provide[Container.task_use_case]),
 ):
-    await task_use_case.done_by_id(task_id, request.state.user)
+    await task_use_case.update_status_by_id(status, task_id)
 
 
 @router.delete(
-    "/{task_id}",
+    "/{task_id}/",
     status_code=HTTP_204_NO_CONTENT,
     responses={
         HTTP_400_BAD_REQUEST: {},
@@ -118,7 +115,6 @@ async def done_task_by_id(
 @inject
 async def delete_task_by_id(
     task_id: int,
-    permission=Depends(IsAdmin()),
     task_use_case=Depends(Provide[Container.task_use_case]),
 ):
     await task_use_case.delete_by_id(task_id)

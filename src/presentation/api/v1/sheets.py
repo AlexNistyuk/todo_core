@@ -11,7 +11,6 @@ from starlette.status import (
 
 from application.dependencies import Container
 from domain.entities.sheets import SheetCreateUpdateDTO, SheetIdDTO, SheetRetrieveDTO
-from infrastructure.permissions.users import IsAdmin
 
 router = APIRouter()
 
@@ -43,14 +42,13 @@ async def get_all_sheets(sheet_use_case=Depends(Provide[Container.sheet_use_case
 async def create_sheet(
     request: Request,
     new_sheet: SheetCreateUpdateDTO,
-    permission=Depends(IsAdmin()),
     sheet_use_case=Depends(Provide[Container.sheet_use_case]),
 ):
     return await sheet_use_case.insert(new_sheet.model_dump(), request.state.user)
 
 
 @router.get(
-    "/{sheet_id}",
+    "/{sheet_id}/",
     response_model=SheetRetrieveDTO,
     status_code=HTTP_200_OK,
     responses={
@@ -68,7 +66,7 @@ async def get_sheet_by_id(
 
 
 @router.put(
-    "/{sheet_id}",
+    "/{sheet_id}/",
     status_code=HTTP_204_NO_CONTENT,
     responses={
         HTTP_400_BAD_REQUEST: {},
@@ -79,14 +77,13 @@ async def get_sheet_by_id(
 async def update_sheet_by_id(
     sheet_id: int,
     updated_sheet: SheetCreateUpdateDTO,
-    permission=Depends(IsAdmin()),
     sheet_use_case=Depends(Provide[Container.sheet_use_case]),
 ):
     await sheet_use_case.update_by_id(updated_sheet.model_dump(), sheet_id)
 
 
 @router.delete(
-    "/{sheet_id}",
+    "/{sheet_id}/",
     status_code=HTTP_204_NO_CONTENT,
     responses={
         HTTP_400_BAD_REQUEST: {},
@@ -96,7 +93,6 @@ async def update_sheet_by_id(
 @inject
 async def delete_sheet_by_id(
     sheet_id: int,
-    permission=Depends(IsAdmin()),
     sheet_use_case=Depends(Provide[Container.sheet_use_case]),
 ):
     await sheet_use_case.delete_by_id(sheet_id)
