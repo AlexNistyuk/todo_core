@@ -3,7 +3,6 @@ from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from application.use_cases.interfaces import IUseCase
 from application.use_cases.kafka import KafkaUseCase
-from domain.enums.tasks import TaskStatus
 from domain.exceptions.tasks import (
     TaskCreateError,
     TaskDeleteError,
@@ -48,8 +47,8 @@ class TaskUseCase(IUseCase):
             raise TaskUpdateError
         return result
 
-    async def done_by_id(self, task_id: int, user: dict) -> Task:
-        data = {"status": TaskStatus.done.value}
+    async def update_status_by_id(self, new_status: str, task_id: int) -> Task:
+        data = {"status": new_status}
 
         try:
             async with self.uow():
@@ -60,8 +59,6 @@ class TaskUseCase(IUseCase):
             raise TaskIntegrityError
         except Exception:
             raise TaskUpdateError
-
-        await self.kafka_use_case.send_done_task(result.name, user.get("id"))
 
         return result
 
