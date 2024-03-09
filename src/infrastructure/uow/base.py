@@ -1,5 +1,6 @@
 from infrastructure.managers.database import DatabaseManager
 from infrastructure.repositories.sheets import SheetRepository
+from infrastructure.repositories.statuses import StatusRepository
 from infrastructure.repositories.tasks import TaskRepository
 from infrastructure.uow.interfaces import IUnitOfWork
 
@@ -19,6 +20,7 @@ class UnitOfWork(DatabaseManager, IUnitOfWork):
         self.session = self.session_factory()
         self.sheets = SheetRepository(self.session)
         self.tasks = TaskRepository(self.session)
+        self.statuses = StatusRepository(self.session)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if exc_type is None:

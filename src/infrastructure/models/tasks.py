@@ -1,8 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy import ForeignKey, String, UniqueConstraint
-from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
-from domain.enums.tasks import TaskStatus
 from infrastructure.models.base import Base
 from infrastructure.models.mixins import TimeMixin
 
@@ -13,10 +13,9 @@ class Task(Base, TimeMixin):
 
     name: Mapped[str] = mapped_column(String(20))
     description: Mapped[str] = mapped_column(String(100), nullable=True)
-    status: Mapped[TaskStatus] = mapped_column(
-        PgEnum(TaskStatus, name="task_status"),
-        server_default=TaskStatus.in_progress.value,
-    )
+    status_id: Mapped[int] = mapped_column(ForeignKey("statuses.id"))
     sheet_id: Mapped[int] = mapped_column(
         ForeignKey("sheets.id", ondelete="CASCADE"), nullable=False
     )
+    assignee: Mapped[str] = mapped_column(String(20), nullable=True)
+    estimated_date: Mapped[datetime] = mapped_column(nullable=True)

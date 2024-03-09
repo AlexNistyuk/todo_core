@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from infrastructure.config import get_settings
 from infrastructure.models.sheets import Sheet
+from infrastructure.models.statuses import Status
 from infrastructure.models.tasks import Task
 
 settings = get_settings()

@@ -15,3 +15,4 @@ class SheetCreateUpdateDTO(BaseModel):
 class SheetRetrieveDTO(SheetIdDTO, SheetCreateUpdateDTO):
     created_at: datetime
     updated_at: datetime
+    creator_id: int

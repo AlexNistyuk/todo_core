@@ -97,11 +97,11 @@ async def update_task_by_id(
 )
 @inject
 async def update_task_status_by_id(
-    status: str,
+    status_id: int,
     task_id: int,
     task_use_case=Depends(Provide[Container.task_use_case]),
 ):
-    await task_use_case.update_status_by_id(status, task_id)
+    await task_use_case.update_status_by_id(status_id, task_id)
 
 
 @router.delete(

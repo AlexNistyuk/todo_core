@@ -18,11 +18,16 @@ from infrastructure.uow.interfaces import IUnitOfWork
 class SheetUseCase(IUseCase):
     """Sheet use case"""
 
-    def __init__(self, uow: IUnitOfWork, kafka_use_case: KafkaUseCase) -> None:
+    def __init__(
+        self, uow: IUnitOfWork, kafka_use_case: KafkaUseCase, status_use_case: IUseCase
+    ) -> None:
         self.uow = uow
         self.kafka_use_case = kafka_use_case
+        self.status_use_case = status_use_case
 
     async def insert(self, data: dict, user: dict) -> dict:
+        data["creator_id"] = user.get("id")
+
         try:
             async with self.uow():
                 result = await self.uow.sheets.insert(data)

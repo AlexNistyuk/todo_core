@@ -10,3 +10,4 @@ class Sheet(Base, TimeMixin):
 
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     description: Mapped[str] = mapped_column(String(60), nullable=True)
+    creator_id: Mapped[int] = mapped_column(nullable=False)
