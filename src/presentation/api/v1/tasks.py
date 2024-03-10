@@ -15,6 +15,7 @@ from domain.entities.tasks import (
     TaskIdDTO,
     TaskRetrieveDTO,
     TaskUpdateDTO,
+    TaskUpdateStatusDTO,
 )
 
 router = APIRouter()
@@ -30,8 +31,12 @@ router = APIRouter()
     },
 )
 @inject
-async def get_all_tasks(task_use_case=Depends(Provide[Container.task_use_case])):
-    return await task_use_case.get_all()
+async def get_all_tasks(
+    sheet_id: int = None, task_use_case=Depends(Provide[Container.task_use_case])
+):
+    if sheet_id is None:
+        return await task_use_case.get_all()
+    return await task_use_case.get_by_sheet_id(sheet_id)
 
 
 @router.post(
@@ -97,11 +102,11 @@ async def update_task_by_id(
 )
 @inject
 async def update_task_status_by_id(
-    status_id: int,
+    new_status: TaskUpdateStatusDTO,
     task_id: int,
     task_use_case=Depends(Provide[Container.task_use_case]),
 ):
-    await task_use_case.update_status_by_id(status_id, task_id)
+    await task_use_case.update_status_by_id(new_status.model_dump(), task_id)
 
 
 @router.delete(

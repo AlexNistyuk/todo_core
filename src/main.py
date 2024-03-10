@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from application.dependencies import Container
 from infrastructure.managers.database import DatabaseManager
@@ -19,6 +20,7 @@ async def lifespan(app: FastAPI):
         modules=[
             "presentation.api.v1.sheets",
             "presentation.api.v1.tasks",
+            "presentation.api.v1.statuses",
         ]
     )
 
@@ -30,5 +32,20 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(api_router)
+
+# TODO mek a function like init_auth_middleware
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 init_auth_middleware(app)

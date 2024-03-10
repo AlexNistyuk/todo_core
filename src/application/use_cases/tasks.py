@@ -54,22 +54,29 @@ class TaskUseCase(IUseCase):
             raise TaskUpdateError
         return result
 
-    async def update_status_by_id(self, new_status_id: int, task_id: int) -> Task:
-        data = {"status_id": new_status_id}
-
+    async def update_status_by_id(self, new_status: dict, task_id: int) -> Task:
         try:
             async with self.uow():
-                result = await self.uow.tasks.update_by_id(data, task_id)
+                result = await self.uow.tasks.update_by_id(new_status, task_id)
         except NoResultFound:
             raise TaskNotFoundError
         except IntegrityError:
             raise TaskIntegrityError
         except Exception:
             raise TaskUpdateError
-
         return result
 
-    async def get_all(self) -> Sequence:
+    async def get_by_sheet_id(self, sheet_id: int) -> Sequence[Task]:
+        try:
+            async with self.uow():
+                result = await self.uow.tasks.get_by_sheet_id(sheet_id)
+        except NoResultFound:
+            raise TaskNotFoundError
+        except Exception:
+            raise TaskRetrieveError
+        return result
+
+    async def get_all(self) -> Sequence[Task]:
         try:
             async with self.uow():
                 result = await self.uow.tasks.get_all()

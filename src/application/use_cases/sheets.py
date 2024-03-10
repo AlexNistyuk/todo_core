@@ -28,9 +28,13 @@ class SheetUseCase(IUseCase):
     async def insert(self, data: dict, user: dict) -> dict:
         data["creator_id"] = user.get("id")
 
+        # TODO add to env
+        statuses = ["To do", "In progress", "In review", "Done"]
+
         try:
             async with self.uow():
                 result = await self.uow.sheets.insert(data)
+                await self.uow.statuses.insert_many(result, statuses)
         except IntegrityError:
             raise SheetIntegrityError
         except Exception:

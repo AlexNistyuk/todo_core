@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlalchemy import select
 
 from infrastructure.models.statuses import Status
@@ -22,3 +24,13 @@ class StatusRepository(BaseRepository):
         result = await self.session.execute(query)
 
         return result.scalar_one()
+
+    async def get_by_sheet_id(self, sheet_id: int) -> Sequence[Status]:
+        query = (
+            select(self.model)
+            .where(self.model.sheet_id == sheet_id)
+            .order_by(self.model.id)
+        )
+        result = await self.session.execute(query)
+
+        return result.scalars().all()

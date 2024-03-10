@@ -7,6 +7,10 @@ class TaskIdDTO(BaseModel):
     id: int
 
 
+class TaskUpdateStatusDTO(BaseModel):
+    status_id: int
+
+
 class TaskCreateUpdateDTO(BaseModel):
     name: str = Field(min_length=1, max_length=20)
     description: str | None = Field(max_length=100, default=None)
@@ -14,7 +18,7 @@ class TaskCreateUpdateDTO(BaseModel):
     assignee: str | None = Field(max_length=20, default=None)
 
 
-class TaskUpdateDTO(TaskCreateUpdateDTO):
+class TaskUpdateDTO(TaskCreateUpdateDTO, TaskUpdateStatusDTO):
     status_id: int
 
 
