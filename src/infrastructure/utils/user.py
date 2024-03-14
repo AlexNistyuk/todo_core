@@ -12,5 +12,10 @@ class UserInfo:
         async with aiohttp.ClientSession() as session:
             response = await session.get(cls.url, headers=headers)
             if response.status == HTTP_200_OK:
-                return await response.json()
-            return None
+                data = await response.json()
+            else:
+                data = None
+
+            response.close()
+
+            return data

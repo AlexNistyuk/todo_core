@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     user_info_url: str
     kafka_url: str
     kafka_topic: str
+    allow_origins: list
+    allow_methods: list
+    allow_headers: list
+    allow_credentials: bool
+    default_task_statuses: list
 
     model_config = SettingsConfigDict(env_file=ENV_FILE_PATH, extra="allow")
 
