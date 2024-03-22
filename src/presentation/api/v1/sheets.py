@@ -25,8 +25,10 @@ router = APIRouter()
     },
 )
 @inject
-async def get_all_sheets(sheet_use_case=Depends(Provide[Container.sheet_use_case])):
-    return await sheet_use_case.get_all()
+async def get_all_sheets(
+    with_count: bool = False, sheet_use_case=Depends(Provide[Container.sheet_use_case])
+):
+    return await sheet_use_case.get_all(with_count)
 
 
 @router.post(

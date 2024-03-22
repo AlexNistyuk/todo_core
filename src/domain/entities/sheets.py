@@ -16,3 +16,19 @@ class SheetRetrieveDTO(SheetIdDTO, SheetCreateUpdateDTO):
     created_at: datetime
     updated_at: datetime
     creator_id: int
+    task_count: int | None = None
+    status_count: int | None = None
+
+    class Config:
+        from_attributes = True
+
+    @classmethod
+    def model_validation(cls, *args, **kwargs):
+        task_count = kwargs.pop("task_count", None)
+        status_count = kwargs.pop("status_count", None)
+
+        obj = cls.model_validate(*args, **kwargs)
+        obj.task_count = task_count
+        obj.status_count = status_count
+
+        return obj

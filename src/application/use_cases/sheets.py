@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from application.use_cases.interfaces import IUseCase
 from application.use_cases.kafka import KafkaUseCase
+from domain.entities.sheets import SheetRetrieveDTO
 from domain.exceptions.sheets import (
     SheetCreateError,
     SheetDeleteError,
@@ -58,14 +59,22 @@ class SheetUseCase(IUseCase):
             raise SheetUpdateError
         return result
 
-    async def get_all(self) -> Sequence:
+    async def get_all(self, with_count: bool = False) -> Sequence:
         try:
             async with self.uow():
-                result = await self.uow.sheets.get_all()
+                result = await self.uow.sheets.get_all(with_count)
         except NoResultFound:
             raise SheetNotFoundError
         except Exception:
             raise SheetRetrieveError
+
+        if with_count:
+            return [
+                SheetRetrieveDTO.model_validation(
+                    item[0], task_count=item[1], status_count=item[2]
+                )
+                for item in result
+            ]
         return result
 
     async def get_by_id(self, sheet_id: int, user: dict) -> Sheet:
