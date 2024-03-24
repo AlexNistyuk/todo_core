@@ -19,7 +19,7 @@ services:
     image: postgres:alpine
     container_name: ${POSTGRES_HOST}
     ports:
-      - ${POSTGRES_PORT_LOCAL}:${POSTGRES_PORT}
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     env_file:
       - .env
     volumes:
@@ -52,9 +52,9 @@ services:
       test: nc -z localhost ${KAFKA_PORT} || exit -1
       interval: ${KAFKA_HEALTHCHECK_INTERVAL}
       timeout: ${KAFKA_HEALTHCHECK_TIMEOUT}
-      retries: ${KAFKA_HEALTHCHECK_RETRIES}
+#      retries: ${KAFKA_HEALTHCHECK_RETRIES}
 
-networks:
-  default:
-    name: ${DEFAULT_NETWORK}
-    external: true
+#networks:
+#  default:
+#    name: ${DEFAULT_NETWORK}
+#    external: true

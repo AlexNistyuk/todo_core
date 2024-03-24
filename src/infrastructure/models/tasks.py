@@ -1,10 +1,12 @@
 from datetime import datetime
 
 from sqlalchemy import ForeignKey, String, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.models.base import Base
 from infrastructure.models.mixins import TimeMixin
+from infrastructure.models.sheets import Sheet
+from infrastructure.models.statuses import Status
 
 
 class Task(Base, TimeMixin):
@@ -19,3 +21,8 @@ class Task(Base, TimeMixin):
     )
     assignee: Mapped[str] = mapped_column(String(20), nullable=True)
     estimated_date: Mapped[datetime] = mapped_column(nullable=True)
+
+
+class TaskRelationship(Task):
+    sheet: Mapped["Sheet"] = relationship()
+    status: Mapped["Status"] = relationship()
