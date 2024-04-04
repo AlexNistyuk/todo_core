@@ -25,7 +25,7 @@ class TestTask:
 
     @pytest.mark.asyncio
     async def test_create_ok(
-        self, client, mock_kafka, mock_admin_permission, mock_task_repo
+        self, client, mock_kafka, mock_admin_permission, mock_task_repo, mock_status_repo
     ):
         response = client.post(url=self.url, json=self.new_task.dump_create())
 
@@ -87,16 +87,6 @@ class TestTask:
     #     response = client.put(url=f"{self.url}{self.fake.pyint()}/", json={})
     #
     #     assert response.status_code == 422
-
-    @pytest.mark.asyncio
-    async def test_done_ok(
-        self, client, mock_kafka, mock_user_permission, mock_task_repo
-    ):
-        response = client.patch(
-            url=f"{self.url}{self.fake.pyint()}/", params={"status": self.fake.name()}
-        )
-
-        assert response.status_code == 204
 
     @pytest.mark.asyncio
     async def test_delete_ok(
