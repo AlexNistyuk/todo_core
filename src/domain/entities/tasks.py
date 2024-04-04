@@ -2,6 +2,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+from domain.entities.sheets import SheetRetrieveDTO
+from domain.entities.statuses import StatusRetrieveDTO
+
 
 class TaskIdDTO(BaseModel):
     id: int
@@ -30,3 +33,5 @@ class TaskRetrieveDTO(TaskIdDTO, TaskCreateDTO):
     status_id: int
     created_at: datetime
     updated_at: datetime
+    sheet: SheetRetrieveDTO | None = None
+    status: StatusRetrieveDTO | None = None

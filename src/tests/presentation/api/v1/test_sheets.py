@@ -19,15 +19,19 @@ class TestSheet:
     ):
         response = client.get(url=self.url)
 
+        print(response.json())
+
         assert response.status_code == 200
         assert isinstance(response.json(), list)
         assert isinstance(response.json()[0], dict)
 
     @pytest.mark.asyncio
     async def test_create_ok(
-        self, client, mock_kafka, mock_admin_permission, mock_sheet_repo
+        self, client, mock_kafka, mock_admin_permission, mock_sheet_repo, mock_status_repo
     ):
         response = client.post(url=self.url, json=self.new_sheet.dump_create())
+
+        print(response.json())
 
         assert response.status_code == 201
         assert isinstance(response.json(), dict)

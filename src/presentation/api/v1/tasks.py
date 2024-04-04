@@ -32,11 +32,13 @@ router = APIRouter()
 )
 @inject
 async def get_all_tasks(
-    sheet_id: int = None, task_use_case=Depends(Provide[Container.task_use_case])
+    sheet_id: int = None,
+    with_joins: bool = False,
+    task_use_case=Depends(Provide[Container.task_use_case]),
 ):
     if sheet_id is None:
-        return await task_use_case.get_all()
-    return await task_use_case.get_by_sheet_id(sheet_id)
+        return await task_use_case.get_all(with_joins)
+    return await task_use_case.get_by_sheet_id(sheet_id, with_joins)
 
 
 @router.post(

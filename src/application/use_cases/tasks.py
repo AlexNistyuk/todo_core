@@ -66,20 +66,20 @@ class TaskUseCase(IUseCase):
             raise TaskUpdateError
         return result
 
-    async def get_by_sheet_id(self, sheet_id: int) -> Sequence[Task]:
+    async def get_by_sheet_id(self, sheet_id: int, with_joins: bool) -> Sequence:
         try:
             async with self.uow():
-                result = await self.uow.tasks.get_by_sheet_id(sheet_id)
+                result = await self.uow.tasks.get_by_sheet_id(sheet_id, with_joins)
         except NoResultFound:
             raise TaskNotFoundError
         except Exception:
             raise TaskRetrieveError
         return result
 
-    async def get_all(self) -> Sequence[Task]:
+    async def get_all(self, with_joins: bool) -> Sequence:
         try:
             async with self.uow():
-                result = await self.uow.tasks.get_all()
+                result = await self.uow.tasks.get_all(with_joins)
         except NoResultFound:
             raise TaskNotFoundError
         except Exception:

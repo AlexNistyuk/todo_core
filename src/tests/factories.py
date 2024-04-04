@@ -48,6 +48,10 @@ class SheetFactory:
     def updated_at(self):
         return datetime.datetime.now()
 
+    @property
+    def creator_id(self):
+        return self.fake.pyint()
+
 
 class TaskFactory:
     def __init__(self):
@@ -58,7 +62,8 @@ class TaskFactory:
             "name": self.name,
             "description": self.description,
             "sheet_id": self.sheet_id,
-            "status": self.status,
+            "estimated_date": str(self.estimated_date),
+            "status_id": self.status_id,
         }
 
     @property
@@ -70,10 +75,6 @@ class TaskFactory:
         return self.fake.user_name()
 
     @property
-    def status(self):
-        return "done"
-
-    @property
     def description(self):
         return self.fake.user_name()
 
@@ -82,9 +83,17 @@ class TaskFactory:
         return self.fake.pyint()
 
     @property
+    def status_id(self):
+        return self.fake.pyint()
+
+    @property
     def created_at(self):
         return datetime.datetime.now()
 
     @property
     def updated_at(self):
+        return datetime.datetime.now()
+
+    @property
+    def estimated_date(self):
         return datetime.datetime.now()

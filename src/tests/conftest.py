@@ -44,6 +44,12 @@ def mock_sheet_repo(mocker):
     mocker.patch(f"{repo_path}.get_by_id", return_value=sheet)
     mocker.patch(f"{repo_path}.delete_by_id", return_value=fake.pyint())
 
+@pytest.fixture()
+def mock_status_repo(mocker):
+    repo_path = "infrastructure.repositories.statuses.StatusRepository"
+    mocker.patch(f"{repo_path}.insert_many", return_value=fake.pyint())
+    mocker.patch(f"{repo_path}.get_first_status_id", return_value=fake.pyint())
+
 
 @pytest.fixture()
 def mock_task_repo(mocker):
