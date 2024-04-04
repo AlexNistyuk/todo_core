@@ -59,7 +59,7 @@ class SheetUseCase(IUseCase):
             raise SheetUpdateError
         return result
 
-    async def get_all(self, with_count: bool = False) -> Sequence:
+    async def get_all(self, with_count: bool = False) -> Sequence | list:
         try:
             async with self.uow():
                 result = await self.uow.sheets.get_all(with_count)

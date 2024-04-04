@@ -6,7 +6,7 @@ class StatusUpdateDTO(BaseModel):
 
 
 class StatusCreateDTO(BaseModel):
-    names: list[str] = Field(min_items=1, max_items=10)
+    names: list[str]
     sheet_id: int
 
 

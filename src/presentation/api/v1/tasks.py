@@ -32,7 +32,7 @@ router = APIRouter()
 )
 @inject
 async def get_all_tasks(
-    sheet_id: int = None,
+    sheet_id: int | None = None,
     with_joins: bool = False,
     task_use_case=Depends(Provide[Container.task_use_case]),
 ):

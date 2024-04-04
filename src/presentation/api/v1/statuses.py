@@ -25,7 +25,8 @@ router = APIRouter()
 )
 @inject
 async def get_all_statuses(
-    sheet_id: int = None, status_use_case=Depends(Provide[Container.status_use_case])
+    sheet_id: int | None = None,
+    status_use_case=Depends(Provide[Container.status_use_case]),
 ):
     if sheet_id is None:
         return await status_use_case.get_all()

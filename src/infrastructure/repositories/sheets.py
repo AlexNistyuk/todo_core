@@ -15,10 +15,11 @@ class SheetRepository(BaseRepository):
                 select(func.count()).where(Task.sheet_id == Sheet.id).as_scalar(),
                 select(func.count()).where(Status.sheet_id == Sheet.id).as_scalar(),
             )
-        else:
-            subqueries = tuple()
 
-        query = select(self.model, *subqueries).order_by(self.model.id)
+            query = select(self.model, *subqueries).order_by(self.model.id)
+        else:
+            query = select(self.model).order_by(self.model.id)
+
         result = await self.session.execute(query)
 
         if with_count:

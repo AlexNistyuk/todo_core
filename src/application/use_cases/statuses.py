@@ -71,7 +71,7 @@ class StatusUseCase(IUseCase):
             raise StatusRetrieveError
         return status_id
 
-    async def get_by_sheet_id(self, sheet_id: int) -> Sequence[Status]:
+    async def get_by_sheet_id(self, sheet_id: int) -> Sequence:
         try:
             async with self.uow():
                 result = await self.uow.statuses.get_by_sheet_id(sheet_id)
