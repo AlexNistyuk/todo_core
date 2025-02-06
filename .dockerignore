@@ -1,0 +1,6 @@
+/.gitignore
+/.idea
+/README.md
+/.git
+/postgres_data
+/.env
